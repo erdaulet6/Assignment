@@ -1,5 +1,3 @@
-import java.util.Scanner;
-
 public class Matrix {
     private double[][] matrix;
     private int rows;
@@ -15,31 +13,60 @@ public class Matrix {
         if (row >= 0 && row < rows && column >= 0 && column < columns) {
             matrix[row][column] = value;
         } else {
-            System.out.println("Invalid row or column index.");
+            System.out.println("Invalid matrix indices.");
+        }
+    }
+
+    public double getElement(int row, int column) {
+        if (row >= 0 && row < rows && column >= 0 && column < columns) {
+            return matrix[row][column];
+        } else {
+            System.out.println("Invalid matrix indices.");
+            return 0.0;
         }
     }
 
     public void add(Matrix otherMatrix) {
-        if (this.rows == otherMatrix.rows && this.columns == otherMatrix.columns) {
+        if (rows == otherMatrix.rows && columns == otherMatrix.columns) {
             for (int i = 0; i < rows; i++) {
                 for (int j = 0; j < columns; j++) {
-                    this.matrix[i][j] += otherMatrix.matrix[i][j];
+                    matrix[i][j] += otherMatrix.getElement(i, j);
                 }
             }
         } else {
-            System.out.println("Matrix dimensions do not match for addition.");
+            System.out.println("Matrices have different dimensions and cannot be added.");
         }
     }
 
-    public void multiply(double scalar) {
+    public void multiplyByNumber(double number) {
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < columns; j++) {
-                this.matrix[i][j] *= scalar;
+                matrix[i][j] *= number;
             }
         }
     }
 
-    public void print() {
+    public void multiply(Matrix otherMatrix) {
+        if (columns == otherMatrix.rows) {
+            double[][] result = new double[rows][otherMatrix.columns];
+
+            for (int i = 0; i < rows; i++) {
+                for (int j = 0; j < otherMatrix.columns; j++) {
+                    for (int k = 0; k < columns; k++) {
+                        result[i][j] += matrix[i][k] * otherMatrix.getElement(k, j);
+                    }
+                }
+            }
+
+            // Update the current matrix with the result
+            matrix = result;
+            columns = otherMatrix.columns;
+        } else {
+            System.out.println("Invalid matrix dimensions for multiplication.");
+        }
+    }
+
+    public void printMatrix() {
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < columns; j++) {
                 System.out.print(matrix[i][j] + " ");
@@ -48,85 +75,39 @@ public class Matrix {
         }
     }
 
-    public void multiply(Matrix otherMatrix) {
-        if (this.columns == otherMatrix.rows) {
-            double[][] result = new double[this.rows][otherMatrix.columns];
-            for (int i = 0; i < this.rows; i++) {
-                for (int j = 0; j < otherMatrix.columns; j++) {
-                    for (int k = 0; k < this.columns; k++) {
-                        result[i][j] += this.matrix[i][k] * otherMatrix.matrix[k][j];
-                    }
-                }
-            }
-            this.matrix = result;
-            this.columns = otherMatrix.columns;
-        } else {
-            System.out.println("Invalid matrix multiplication. Number of columns in the first matrix must be equal to the number of rows in the second matrix.");
-        }
-    }
-
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
+        Matrix matrix1 = new Matrix(2, 3);
+        matrix1.setElement(0, 0, 1);
+        matrix1.setElement(0, 1, 2);
+        matrix1.setElement(0, 2, 3);
+        matrix1.setElement(1, 0, 4);
+        matrix1.setElement(1, 1, 5);
+        matrix1.setElement(1, 2, 6);
 
-        System.out.print("Enter the number of rows for Matrix 1: ");
-        int rows1 = scanner.nextInt();
-
-        System.out.print("Enter the number of columns for Matrix 1: ");
-        int columns1 = scanner.nextInt();
-
-        Matrix matrix1 = new Matrix(rows1, columns1);
-
-        System.out.println("Enter the elements of Matrix 1:");
-        for (int i = 0; i < rows1; i++) {
-            for (int j = 0; j < columns1; j++) {
-                System.out.print("Matrix1[" + i + "][" + j + "]: ");
-                double element = scanner.nextDouble();
-                matrix1.setElement(i, j, element);
-            }
-        }
-
-        System.out.print("Enter the number of rows for Matrix 2: ");
-        int rows2 = scanner.nextInt();
-
-        System.out.print("Enter the number of columns for Matrix 2: ");
-        int columns2 = scanner.nextInt();
-
-        Matrix matrix2 = new Matrix(rows2, columns2);
-
-        System.out.println("Enter the elements of Matrix 2:");
-        for (int i = 0; i < rows2; i++) {
-            for (int j = 0; j < columns2; j++) {
-                System.out.print("Matrix2[" + i + "][" + j + "]: ");
-                double element = scanner.nextDouble();
-                matrix2.setElement(i, j, element);
-            }
-        }
+        Matrix matrix2 = new Matrix(3, 2);
+        matrix2.setElement(0, 0, 7);
+        matrix2.setElement(0, 1, 8);
+        matrix2.setElement(1, 0, 9);
+        matrix2.setElement(1, 1, 10);
+        matrix2.setElement(2, 0, 11);
+        matrix2.setElement(2, 1, 12);
 
         System.out.println("Matrix 1:");
-        matrix1.print();
+        matrix1.printMatrix();
 
-        System.out.println("Matrix 2:");
-        matrix2.print();
+        System.out.println("\nMatrix 2:");
+        matrix2.printMatrix();
 
-        // Test addition
+        System.out.println("\nAdding Matrix 1 and Matrix 2:");
         matrix1.add(matrix2);
-        System.out.println("After addition:");
-        matrix1.print();
+        matrix1.printMatrix();
 
-        // Test multiplication by a scalar
-        System.out.print("Enter a scalar value for multiplication: ");
-        double scalar = scanner.nextDouble();
-        matrix1.multiply(scalar);
-        System.out.println("After multiplication by " + scalar + ":");
-        matrix1.print();
+        System.out.println("\nMultiplying Matrix 1 by 2:");
+        matrix1.multiplyByNumber(2);
+        matrix1.printMatrix();
 
-        // Test matrix multiplication (optional)
-        if (matrix1.columns == matrix2.rows) {
-            matrix1.multiply(matrix2);
-            System.out.println("After matrix multiplication:");
-            matrix1.print();
-        }
-
-        scanner.close();
+        System.out.println("\nMultiplying Matrix 1 and Matrix 2:");
+        matrix1.multiply(matrix2);
+        matrix1.printMatrix();
     }
 }
