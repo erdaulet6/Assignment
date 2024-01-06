@@ -51,7 +51,7 @@ class Reader {
     }
 
     public static void main(String[] args) {
-        // Create a Book
+       
         Book book1 = new Book("Adventures", "John Doe");
         Book book2 = new Book("Dictionary", "Jane Smith");
         Book book3 = new Book("Encyclopedia", "Bob Johnson");
