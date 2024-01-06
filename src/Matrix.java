@@ -58,7 +58,7 @@ public class Matrix {
                 }
             }
 
-            // Update the current matrix with the result
+           
             matrix = result;
             columns = otherMatrix.columns;
         } else {
