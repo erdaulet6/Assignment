@@ -9,7 +9,6 @@ class Book {
         this.author = author;
     }
 
-    @Override
     public String toString() {
         return title + " by " + author;
     }
@@ -57,17 +56,16 @@ class Reader {
         Book book2 = new Book("Dictionary", "Jane Smith");
         Book book3 = new Book("Encyclopedia", "Bob Johnson");
 
-        // Create a Reader
+     
         Reader reader = new Reader("Petrov VV", "123456", "Science", "01/01/1990", "+123456789");
 
-        // Demonstrate the overloaded takeBook() methods
         reader.takeBook(3);
 
         reader.takeBook("Adventures", "Dictionary", "Encyclopedia");
 
         reader.takeBook(book1, book2, book3);
 
-        // Demonstrate the overloaded returnBook() methods
+        
         reader.returnBook(3);
 
         reader.returnBook("Adventures", "Dictionary", "Encyclopedia");
